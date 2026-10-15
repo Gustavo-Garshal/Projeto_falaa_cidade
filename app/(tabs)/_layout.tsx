@@ -1,6 +1,5 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-
+import { Feather } from '@react-native-vector-icons/feather';
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
@@ -8,26 +7,41 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme === 'dark' ? 'dark' : 'light'];
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: theme.tint,
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
       <Tabs.Screen
-        name="index"
+        name="mapa"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Mapa',
+          tabBarIcon: ({ color }) => <Feather name="map" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="ranking"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Ranking',
+          tabBarIcon: ({ color }) => <Feather name="award" size={28} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="notificacoes"
+        options={{
+          title: 'Notificações',
+          tabBarIcon: ({ color }) => <Feather name="bell" size={28} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="perfil"
+        options={{
+          title: 'Perfil',
+          tabBarIcon: ({ color }) => <Feather name="user" size={28} color={color} />,
         }}
       />
     </Tabs>

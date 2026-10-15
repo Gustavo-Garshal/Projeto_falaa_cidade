@@ -1,7 +1,8 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import { use } from "react";
+import { Image } from "expo-image";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "@/hooks/use-auth";
 
 const cores = {
   verde: "#108245",
@@ -12,16 +13,10 @@ const cores = {
   alerta: "#b8860b",
 };
 
-export default function Mapa() {
-  const { logado, user } = useLocalSearchParams<{ 
-    logado?: string
-    user?: string
-   }>();
-  const estaLogado = logado === "true";
-  const userData = user ? JSON.parse(user) : null;
-
-  console.log("Parâmetro logado recebido:", logado);
-  console.log("Parâmetro user recebido:", user);
+export default function Perfil() {
+  
+  const {user, isLogin: estaLogado} = useAuth();
+  const userData = user ? user : "Sem informação";
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,6 +27,12 @@ export default function Mapa() {
               Você está logado
               user: {userData.displayName} - {userData.email}
             </Text>
+            <Image
+              style={styles.fotoPerfil}
+              source={{ uri: userData.photoURL }}
+              contentFit="cover"
+              transition={1000}
+            />
             <Text style={styles.titulo}>Aqui vai o mapa</Text>
             <Link href="/perfil" asChild>
               <Pressable>
@@ -78,4 +79,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
+  fotoPerfil: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: cores.verde,
+    marginTop: 10,
+  }
 });
