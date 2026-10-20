@@ -16,12 +16,12 @@ const cores = {
 export default function Mapa() {
   
   const {user, isLogin: estaLogado} = useAuth();
-  const userData = user ? user : "Sem informação";
+  const userData = user;
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.status}>
-        {estaLogado ? (
+        {userData && user ?(
           <>
             <Text style={[styles.statusTexto, { color: cores.verde }]}>
               Você está logado
@@ -29,7 +29,7 @@ export default function Mapa() {
             </Text>
             <Image
               style={styles.fotoPerfil}
-              source={{ uri: userData.photoURL }}
+              source={{ uri: userData.photoURL ?? undefined}}
               contentFit="cover"
               transition={1000}
             />

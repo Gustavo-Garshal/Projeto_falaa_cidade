@@ -8,6 +8,7 @@ import "react-native-reanimated";
 
 import { AuthProvider } from "@/context/auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { cores } from "@/styles/cores";
 
 export const unstable_settings = {
   //anchor: "(tabs)",
@@ -19,21 +20,22 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      {/* NOVO — envolve tudo */}
+      {/*Rotas de paginas*/ }
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="cadastro" options={{ 
+            headerShown: true, 
+            title: "Cadastre-se",
+            headerTintColor: cores.branco,
+            headerTitleAlign: "center",
+            headerStyle: {
+              backgroundColor: cores.verde,
+            },
+            }} />
+          <Stack.Screen name="esqueci-senha" options={{ headerShown: false }} />
+          <Stack.Screen name="verificar-email" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal", title: "Modal" }}
-          />
-          <Stack.Screen name="mapa" options={{ title: "Mapa dos buracos" }} />
-          <Stack.Screen
-            name="perfil"
-            options={{ title: "Perfil do usuario" }}
-          />
         </Stack>
       </ThemeProvider>
     </AuthProvider>

@@ -64,6 +64,18 @@ export default function HomeScreen() {
         </View>
         <Text style={styles.textoBotao}>Entrar com o Google</Text>
       </TouchableOpacity>
+
+      <Link
+        href={{
+          pathname: "/cadastro",
+        }}
+        asChild
+      >
+        <TouchableOpacity activeOpacity={0.8}>
+          <Text style={styles.cadastro}>Não tem conta? Cadastre-se</Text>
+        </TouchableOpacity>
+      </Link>
+
       <Text style={styles.rodape}>
         Ao continuar, você concorda com os Termos e a Política de Privacidade
         (LGPD).
@@ -150,12 +162,11 @@ const styles = StyleSheet.create({
     color: cores.verde,
     marginTop: 10,
   },
-  googleIconText: {
-    color: cores.branco,
-    fontSize: 20,
-    fontWeight: 800,
-    marginBottom: 10,
-    marginRight: 10,
+  cadastro: {
+    color: cores.verde,
+    fontSize: 15,
+    fontWeight: "700",
+    marginTop: 20,
   },
   googleIconCircle: {
     width: 32,
