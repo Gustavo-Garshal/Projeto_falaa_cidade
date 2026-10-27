@@ -1,18 +1,12 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "expo-router/react-navigation";
-import { Stack } from "expo-router";
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
 import "react-native-reanimated";
 
 import { AuthProvider } from "@/context/auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { cores } from "@/styles/cores";
 
 export const unstable_settings = {
-  //anchor: "(tabs)",
-  initialRouteName: "login",
+  anchor: "index",
+  //initialRouteName: "login",
 };
 
 export default function RootLayout() {
@@ -20,22 +14,21 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      {/*Rotas de paginas*/ }
+      {/* NOVO — envolve tudo */}
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="cadastro" options={{ 
-            headerShown: true, 
-            title: "Cadastre-se",
-            headerTintColor: cores.branco,
-            headerTitleAlign: "center",
-            headerStyle: {
-              backgroundColor: cores.verde,
-            },
-            }} />
-          <Stack.Screen name="esqueci-senha" options={{ headerShown: false }} />
-          <Stack.Screen name="verificar-email" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="cadastro" options={{ title: "Cadastro" }} />
+          <Stack.Screen
+            name="esqueci-senha"
+            options={{ title: "Recuperar senha" }}
+          />
+          <Stack.Screen name="novo-reporte" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="verificar-email"
+            options={{ headerShown: false }}
+          />
         </Stack>
       </ThemeProvider>
     </AuthProvider>

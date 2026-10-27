@@ -16,4 +16,5 @@ export const cores = {
   cinzaClaro: "#8a93a1", // cor do texto mais apagado (texto legal/LGPD)
   bgBrancoGelo: "#f6f8fa", // fundo geral da tela
   branco: "#ffffff",
+  alerta: "#e63946", // cor de alerta (erros, mensagens de atenção)
 };

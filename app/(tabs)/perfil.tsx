@@ -1,22 +1,20 @@
-import { Link, useLocalSearchParams } from "expo-router";
-import { Image } from "expo-image";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useAuth, useSair } from "@/hooks/use-auth";
+import { cores } from "@/styles";
+import { Image } from 'expo-image';
+import { Link } from "expo-router";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuth } from "@/hooks/use-auth";
 
-const cores = {
-  verde: "#108245",
-  preto: "#161a20",
-  cinzaClaro: "#8a93a1",
-  bgBrancoGelo: "#f6f8fa",
-  branco: "#ffffff",
-  alerta: "#b8860b",
-};
 
+// Por enquanto esta tela é uma cópia da tela Mapa (veja os comentários em mapa.tsx).
+// Na próxima etapa ela vai mostrar os dados e o botão de sair do usuário.
 export default function Perfil() {
-  
-  const {user, isLogin: estaLogado} = useAuth();
-  const userData = user ? user : "Sem informação";
+
+  const { user, isLogin: estaLogado } = useAuth();
+  // Desloga, limpa o histórico de navegação e vai para o index.
+  const handleSair = useSair();
+
+  const perfil = user ? user : 'sem informação disponivel';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -25,20 +23,32 @@ export default function Perfil() {
           <>
             <Text style={[styles.statusTexto, { color: cores.verde }]}>
               Você está logado
-              user: {userData.displayName} - {userData.email}
             </Text>
+            <Text style={styles.titulo}>User: {perfil.displayName}</Text>
+            <Text style={styles.titulo}>Email: {perfil.email}</Text>
+            
             <Image
-              style={styles.fotoPerfil}
-              source={{ uri: userData.photoURL }}
+              style={styles.image}
+              source={{ uri: perfil.photoURL }}
+             // placeholder={{ blurhash }}
               contentFit="cover"
               transition={1000}
             />
+
             <Text style={styles.titulo}>Aqui vai o mapa</Text>
             <Link href="/perfil" asChild>
               <Pressable>
                 <Text style={styles.link}>Perfil do usuário</Text>
               </Pressable>
             </Link>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.botaoSair}
+              onPress={handleSair}
+            >
+              <Text style={styles.textoBotaoSair}>Sair</Text>
+            </TouchableOpacity>
           </>
         ) : (
           <Text style={[styles.statusTexto, { color: cores.alerta }]}>
@@ -79,12 +89,27 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
-  fotoPerfil: {
+  botaoSair: {
+    borderWidth: 2,
+    borderColor: cores.verde,
+    width: 150,
+    padding: 16,
+    alignItems: "center",
+    borderRadius: 15,
+    marginTop: 24,
+  },
+  textoBotaoSair: {
+    color: cores.verde,
+    fontSize: 18,
+    fontWeight: "800",
+  },
+  image: {
+   // flex: 1,
     width: 100,
     height: 100,
     borderRadius: 50,
-    borderWidth: 2,
-    borderColor: cores.verde,
-    marginTop: 10,
-  }
+    marginTop: 20,
+    marginBottom: 20,
+    backgroundColor: '#0553',
+  },
 });

@@ -40,6 +40,12 @@
       "expo-font",
       "expo-image",
       "expo-status-bar",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "O app usa sua localização para mostrar os buracos da sua cidade."
+        }
+      ],
       "expo-web-browser"
     ],
     "experiments": {
