@@ -3,6 +3,7 @@ import "react-native-reanimated";
 
 import { AuthProvider } from "@/context/auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { CidadeProvider } from "@/context/cidade-context";
 
 export const unstable_settings = {
   anchor: "index",
@@ -14,6 +15,7 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
+      <CidadeProvider>
       {/* NOVO — envolve tudo */}
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
@@ -31,6 +33,7 @@ export default function RootLayout() {
           />
         </Stack>
       </ThemeProvider>
+      </CidadeProvider>
     </AuthProvider>
   );
 }

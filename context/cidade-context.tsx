@@ -72,7 +72,8 @@ export function CidadeProvider({ children }: { children: ReactNode }) {
       }
 
       setStatus("pronto");
-    } catch {
+    } catch (e) {
+      console.error("Erro ao obter localização:", e);
       setStatus("erro");
     }
   }, []);
