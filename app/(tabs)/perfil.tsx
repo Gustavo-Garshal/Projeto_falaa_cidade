@@ -36,9 +36,9 @@ export default function Perfil() {
             />
 
             <Text style={styles.titulo}>Aqui vai o mapa</Text>
-            <Link href="/perfil" asChild>
+            <Link href="/lista-de-reportes" asChild>
               <Pressable>
-                <Text style={styles.link}>Perfil do usuário</Text>
+                <Text style={styles.link}>Ver Reportes</Text>
               </Pressable>
             </Link>
 

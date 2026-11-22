@@ -1,20 +1,113 @@
+import { useAuth } from "@/hooks/use-auth";
+import { useCidade } from "@/hooks/use-cidade";
+import { criarReporte } from "@/services/reportes";
 import { cores } from "@/styles";
-import { StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
+//Exporta a função NovoReporte, que cria a tela de novo reporte
 export default function NovoReporte() {
+  //Hooks do React para navegação do Expo Router, autenticação do usuário e localização da cidade
+  const roteador = useRouter();
+  const { user: usuario } = useAuth();
+  const { coordenadas } = useCidade();
+  const [titulo, setTitulo] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [enviando, setEnviando] = useState(false);
+
+  //Verifica se os campos e dados necessarios estão preenchidos e não estão vazios(Só com espaços em branco)
+  async function enviar() {
+    if (!titulo.trim()) {
+      Alert.alert("Título obrigatório", "Diga onde está o problema.");
+      return;
+    }
+    if (!usuario) {
+      Alert.alert("Login necessário", "Entre com a sua conta para reportar.");
+      return;
+    }
+    if (!coordenadas) {
+      Alert.alert("Localização indisponível", "Ative a localização do aparelho.");
+      return;
+    }
+
+    //Inicia o envio do reporte, chamando a função criarReporte() e passando os parametros
+    setEnviando(true);
+    try {
+      await criarReporte({
+        idNotificante: usuario.uid,
+        titulo,
+        descricao,
+        latitude: coordenadas.latitude,
+        longitude: coordenadas.longitude,
+      });
+      //Se der certo exibe uma mensagem de sucesso e volta para a tela anterior
+      Alert.alert("Reporte enviado", "Obrigado por ajudar a cidade!", [
+        { text: "OK", onPress: () => roteador.back() },
+      ]);
+      //Senão exibe uma mensagem de erro para o usuário e exibe o erro no console
+    } catch (erro) {
+      console.warn("Falha ao gravar o reporte", erro);
+      Alert.alert("Não foi possível enviar", "Tente de novo em instantes.");
+    } finally {
+      //Depois de tentar enviar volta o estado de envio para falso
+      setEnviando(false);
+    }
+  }
+
+  //Aqui exibe a tela de novo reporte com os campos
+  //O valor inserido nos campos são setados nas variaveis de NovoReporte()
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Novo reporte</Text>
-    </View>
+    <SafeAreaView style={estilos.container}>
+      <Text style={estilos.titulo}>Novo reporte</Text>
+      <TextInput
+        style={estilos.campo}
+        placeholder="Título (ex.: Buraco na Rua das Palmeiras)"
+        value={titulo}
+        onChangeText={setTitulo}
+      />
+      <TextInput
+        style={[estilos.campo, estilos.campoGrande]}
+        placeholder="Descrição (opcional)"
+        value={descricao}
+        onChangeText={setDescricao}
+        multiline
+      />
+      {/*chama a função enviar com os dados das váriaveis e desabilita o botão enquanto enviando for true*/}
+      <TouchableOpacity style={estilos.botao} onPress={enviar} disabled={enviando}>
+        <Text style={estilos.textoDoBotao}>
+          {enviando ? "Enviando..." : "Enviar reporte"}
+        </Text>
+      </TouchableOpacity>
+      {/*Botão de cancelar que volta para a tela anterior*/}
+      <TouchableOpacity onPress={() => roteador.back()}>
+        <Text style={estilos.cancelar}>Cancelar</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
+const estilos = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 20,
+    gap: 12,
     backgroundColor: cores.bgBrancoGelo,
   },
   titulo: { fontSize: 22, fontWeight: "700", color: cores.preto },
+  campo: {
+    backgroundColor: cores.branco,
+    borderRadius: 12,
+    padding: 14,
+    fontSize: 15,
+  },
+  campoGrande: { minHeight: 100, textAlignVertical: "top" },
+  botao: {
+    backgroundColor: cores.verde,
+    borderRadius: 12,
+    padding: 16,
+    alignItems: "center",
+  },
+  textoDoBotao: { color: cores.branco, fontWeight: "700", fontSize: 16 },
+  cancelar: { textAlign: "center", color: cores.cinzaEscuro, padding: 8 },
 });
