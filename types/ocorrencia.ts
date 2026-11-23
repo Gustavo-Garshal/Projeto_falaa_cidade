@@ -7,6 +7,7 @@ export type Ocorrencia = {
   descricao?: string;
   tipo: Tipo;
   status: StatusOcorrencia;
+  criadoEm?: any; // Timestamp do Firebase
   latitude: number;
   longitude: number;
 }

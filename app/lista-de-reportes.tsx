@@ -45,6 +45,9 @@ export default function ListaDeReportes() {
                     <Text style={estilos.situacao}>
                         {STATUS[item.status].rotulo}
                     </Text>
+                    <Text style={estilos.situacao}>
+                        {item.criadoEm?.toDate().toLocaleString("pt-BR")}
+                    </Text>
                     </View>
                 </View>
                 )}
