@@ -4,23 +4,36 @@ import { criarReporte } from "@/services/reportes";
 import { cores } from "@/styles";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Tipo } from "@/types/ocorrencia";
 
 //Exporta a função NovoReporte, que cria a tela de novo reporte
 export default function NovoReporte() {
+
+  const TIPOS: { valor: Tipo; rotulo: string }[] = [
+  { valor: "buraco", rotulo: "Buraco" },
+  { valor: "calçada", rotulo: "Calçada" },
+  { valor: "iluminação", rotulo: "Iluminação" },
+  { valor: "outro", rotulo: "Outro" },
+];
   //Hooks do React para navegação do Expo Router, autenticação do usuário e localização da cidade
   const roteador = useRouter();
   const { user: usuario } = useAuth();
   const { coordenadas } = useCidade();
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [tipo, setTipo] = useState<Tipo>("buraco"); //armazena o tipo de ocorrência
   const [enviando, setEnviando] = useState(false);
 
   //Verifica se os campos e dados necessarios estão preenchidos e não estão vazios(Só com espaços em branco)
   async function enviar() {
     if (!titulo.trim()) {
       Alert.alert("Título obrigatório", "Diga onde está o problema.");
+      return;
+    }
+    if (!tipo) {
+      Alert.alert("Tipo de ocorrência obrigatório", "Selecione o tipo de ocorrência.");
       return;
     }
     if (!usuario) {
@@ -41,6 +54,7 @@ export default function NovoReporte() {
         descricao,
         latitude: coordenadas.latitude,
         longitude: coordenadas.longitude,
+        tipo,
       });
       //Se der certo exibe uma mensagem de sucesso e volta para a tela anterior
       Alert.alert("Reporte enviado", "Obrigado por ajudar a cidade!", [
@@ -74,11 +88,32 @@ export default function NovoReporte() {
         onChangeText={setDescricao}
         multiline
       />
+      <Text style={estilos.titulo}>Tipo de ocorrência</Text>
+      <View style={estilos.containerTipos}>
+        {TIPOS.map((item) => {
+        const selecionado = tipo === item.valor;
+        return (
+        <TouchableOpacity
+          key={item.valor}
+          style={[estilos.botaoTipo, selecionado && estilos.botaoTipoAtivo]}
+          onPress={() => setTipo(item.valor)}
+          activeOpacity={0.7}
+        >
+        <Text
+          style={[estilos.textoTipo, selecionado && estilos.textoTipoAtivo]}
+        >
+          {item.rotulo}
+        </Text>
+      </TouchableOpacity>
+    );
+  })}
+</View>
       {/*chama a função enviar com os dados das váriaveis e desabilita o botão enquanto enviando for true*/}
       <TouchableOpacity style={estilos.botao} onPress={enviar} disabled={enviando}>
+        {enviando ? (<ActivityIndicator color={cores.branco} />) : (
         <Text style={estilos.textoDoBotao}>
           {enviando ? "Enviando..." : "Enviar reporte"}
-        </Text>
+        </Text>)}
       </TouchableOpacity>
       {/*Botão de cancelar que volta para a tela anterior*/}
       <TouchableOpacity onPress={() => roteador.back()}>
@@ -93,6 +128,31 @@ const estilos = StyleSheet.create({
     padding: 20,
     gap: 12,
     backgroundColor: cores.bgBrancoGelo,
+  },
+  containerTipos: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  botaoTipo: {
+    backgroundColor: cores.branco,
+    borderRadius: 12,
+    borderColor: cores.cinzaClaro,
+    borderWidth: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  botaoTipoAtivo: {
+    backgroundColor: cores.verde,
+    borderColor: cores.verdeEscuro,
+  },
+  textoTipo: {
+    color: cores.preto,
+    fontWeight: "500",
+  },
+  textoTipoAtivo: {
+    color: cores.branco,
+    fontWeight: "700",
   },
   titulo: { fontSize: 22, fontWeight: "700", color: cores.preto },
   campo: {

@@ -39,6 +39,9 @@ export default function ListaDeReportes() {
                     {item.descricao && (
                         <Text style={estilos.descricao}>{item.descricao}</Text>
                     )}
+                    <Text style={estilos.tipo}>
+                      {item.tipo} 
+                    </Text>
                     <Text style={estilos.situacao}>
                         {STATUS[item.status].rotulo}
                     </Text>
@@ -86,6 +89,12 @@ const estilos = StyleSheet.create({
     fontSize: 14,
     color: cores.cinzaEscuro,
     marginTop: 2,
+  },
+  tipo: {
+    fontSize: 14,
+    color: cores.preto,
+    marginTop: 2,
+    textTransform: "capitalize",
   },
   situacao: {
     fontSize: 12,

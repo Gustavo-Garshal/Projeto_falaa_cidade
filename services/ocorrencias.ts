@@ -24,6 +24,7 @@ export async function buscarOcorrencias(_centro: Coordenadas): Promise<Ocorrenci
       id: documento.id,
       titulo: dados.titulo,
       descricao: dados.descricao ?? undefined,
+      tipo: dados.tipo,
       status: dados.status,
       latitude: dados.latitude,
       longitude: dados.longitude,
